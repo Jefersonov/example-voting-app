@@ -24,7 +24,7 @@ services:    #Segunda: O Serviços.. embaixo começamos a definir com qual servi
     deploy:                         #Deploy especificando o serviço placement 
       placement:                     #Especifique a colocação de restrições e preferências. 
         constraints: [node.role == manager]  #Serviço de constraints
-  vote:                                           #
+  vote:                                           #serviço
     image: dockersamples/examplevotingapp_vote:before
     ports:
       - 5000:80
