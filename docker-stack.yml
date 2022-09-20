@@ -1,30 +1,30 @@
-version: "3"
-services:
+version: "3" #Primeira: coisa a ser coloca no docker-compose é a versão=do-meu-docker-compose
+services:    #Segunda: O Serviços.. embaixo começamos a definir com qual serviços iremos trabalhar.
 
-  redis:
-    image: redis:alpine
-    networks:
-      - frontend
-    deploy:
-      replicas: 1
-      update_config:
-        parallelism: 2
-        delay: 10s
-      restart_policy:
-        condition: on-failure
-  db:
-    image: postgres:9.4
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    networks:
+  redis:                  #Redis é um banco de dados em memória para armazenar caches*
+    image: redis:alpine   #Imagem que iremos subir
+    networks:             #Networ cria uma interface na para imagem.
+      - frontend          #Nome da interface criada.
+    deploy:               #Especifica a configuração relacionada à implementação.
+      replicas: 1         #Deploy está especificando o numeros de réplicas a serem criadas para rodar o container nesse caso 1 
+      update_config:      #o número de contêineres a serem atualizados por vez.
+        parallelism: 2    #Nesse caso está 2 containers por vez
+        delay: 10s        #o tempo de espera entre a atualização de um grupo de contêineres.
+      restart_policy:     #serviço para reinciar um container caso de falha ou não subir.
+        condition: on-failure  #A condição para on-failure política reinicia um contêiner se o código de saída indicar um erro de falha
+  db:                       #db serviço do banco de dados.
+    image: postgres:9.4     #Imagem do banco Postgres 9.4
+    environment:            #environment: usado para chamar uma variável. 
+      POSTGRES_USER: "postgres"    #nesse caso a váriabel USER
+      POSTGRES_PASSWORD: "postgres" #E variável PASSWORD
+    volumes:                             #Volumes a serem criados
+      - db-data:/var/lib/postgresql/data #local onde iremos criar o volume especificado.
+    networks:                          #Criando a rede com nome abaixo backend.
       - backend
-    deploy:
-      placement:
-        constraints: [node.role == manager]
-  vote:
+    deploy:                         #Deploy especificando o serviço placement 
+      placement:                     #Especifique a colocação de restrições e preferências. 
+        constraints: [node.role == manager]  #Serviço de constraints
+  vote:                                           #
     image: dockersamples/examplevotingapp_vote:before
     ports:
       - 5000:80
